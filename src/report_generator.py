@@ -16,7 +16,7 @@ USE_GEMINI = True  # Set to False to use OpenAI instead
 if USE_GEMINI:
     # OPTION 1: GEMINI (FREE with Google AI Studio)
     # Get your free API key from: https://aistudio.google.com/app/apikey
-    MY_API_KEY = "AIzaSyCKpSx9jYhJJa4h2TZO8KA64otka7eAow0"
+    MY_API_KEY = ""
     os.environ["GEMINI_API_KEY"] = MY_API_KEY
     
     llm = LLM(
