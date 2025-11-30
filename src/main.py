@@ -63,7 +63,7 @@ def run_portfolio_analysis(epochs=2):
                 add_technical_indicators(raw_path)
             
             # 2. Train (Code omitted for brevity, assumed to work)
-            train_model(ticker, epochs=int(epochs))
+            train_model(ticker, epochs=2)
             
             # 3. Backtest
             final_val = run_backtest(ticker)
