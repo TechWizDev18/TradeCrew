@@ -46,7 +46,7 @@ def generate_report_json_from_df(df, json_path="report.json"):
 
 
 # --- MODIFIED: Reduced epochs to prevent MemoryError ---
-def run_portfolio_analysis(epochs=2): 
+def run_portfolio_analysis(epochs=1): 
     print(f"🚀 Starting Portfolio Analysis (Epochs={epochs})...")
     tickers = get_all_tickers()
     results = []
@@ -63,7 +63,7 @@ def run_portfolio_analysis(epochs=2):
                 add_technical_indicators(raw_path)
             
             # 2. Train (Code omitted for brevity, assumed to work)
-            train_model(ticker, epochs=2)
+            train_model(ticker, epochs=1)
             
             # 3. Backtest
             final_val = run_backtest(ticker)
@@ -108,4 +108,4 @@ def run_portfolio_analysis(epochs=2):
 
 
 if __name__ == "__main__":
-    run_portfolio_analysis(epochs=5)
+    run_portfolio_analysis(epochs=1)
