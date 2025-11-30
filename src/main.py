@@ -46,7 +46,7 @@ def generate_report_json_from_df(df, json_path="report.json"):
 
 
 # --- MODIFIED: Reduced epochs to prevent MemoryError ---
-def run_portfolio_analysis(epochs=5): 
+def run_portfolio_analysis(epochs=2): 
     print(f"🚀 Starting Portfolio Analysis (Epochs={epochs})...")
     tickers = get_all_tickers()
     results = []
