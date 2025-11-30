@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Algo-Trading Research Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117; /* Dark GitHub background */
+            color: #c9d1d9; /* Light text */
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-4xl font-extrabold text-green-400 mb-2">
+                Deep Learning Algo-Trading Crew
+            </h1>
+            <p class="text-xl text-gray-400">Senior Quant Analyst Report (Backend Static Cache)</p>
+            <span class="inline-block px-3 py-1 mt-3 text-xs font-semibold bg-gray-700 rounded-full">
+                Python | PyTorch (LSTM) | CrewAI Output | FastAPI
+            </span>
+        </header>
+
+        <div id="main-recommendation" class="bg-gray-800 p-6 md:p-8 rounded-xl shadow-2xl border-l-4 border-green-500 mb-10">
+            <h2 class="text-3xl font-bold mb-4 text-white">
+                <span class="text-green-400">STRONGEST BUY SIGNAL:</span> <span id="rec-ticker">Loading...</span>
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-gray-700 p-4 rounded-lg">
+                    <p class="text-sm text-gray-400">Backtested Total Return</p>
+                    <p id="rec-return" class="text-4xl font-extrabold text-green-400">---</p>
+                </div>
+
+                <div class="bg-gray-700 p-4 rounded-lg">
+                    <p class="text-sm text-gray-400">Trade Efficiency</p>
+                    <p id="rec-trades" class="text-4xl font-extrabold text-yellow-400">---</p>
+                </div>
+            </div>
+
+            <h3 class="text-xl font-semibold mb-3 text-gray-300">Executive Summary</h3>
+            <p id="rec-summary" class="text-gray-400 leading-relaxed">
+                Awaiting successful connection to cached analysis report...
+            </p>
+        </div>
+
+        <h2 class="text-2xl font-bold mb-6 text-white border-b border-gray-700 pb-2">
+            Top 10 Portfolio Leaders
+        </h2>
+        
+        <div id="leaderboard-container" class="space-y-4">
+            <p class="text-gray-500 text-center py-10" id="loading-indicator">Connecting to Deep Learning Backend...</p>
+        </div>
+        
+        <footer class="mt-12 text-center text-gray-500 text-sm">
+            &copy; 2025 AI Algo-Trading Research. Deployed on Render.
+        </footer>
+    </div>
+
+    <script>
+        const API_ENDPOINT = '/api/report'; 
+        const COLOR_MAP = ["green-500", "blue-500", "yellow-500", "red-500", "purple-500", "indigo-500", "pink-500", "cyan-500", "teal-500", "orange-500"];
+
+        function renderDashboard(data) {
+            
+            // --- DEBUG START ---
+            console.log("2. Attempting to render dashboard with data:", data);
+            
+            const reportData = data.report;
+
+            if (reportData === undefined) {
+                console.error("CRITICAL ERROR: Data received is missing the top-level 'report' key.", data);
+                document.getElementById('loading-indicator').textContent = "ERROR: Malformed JSON. Missing 'report' key.";
+                return;
+            }
+            // --- DEBUG END ---
+            
+            if (!reportData || reportData.length === 0) {
+                document.getElementById('loading-indicator').textContent = "No analysis data available.";
+                return;
+            }
+
+            const bestStock = reportData[0];
+            
+            // --- DEBUG START: Check Best Stock Data Types ---
+            console.log("3. Best Stock Object:", bestStock);
+            console.log("4. 'Return (%)' Type:", typeof bestStock["Return (%)"]);
+            console.log("5. 'Trades' Type:", typeof bestStock.Trades);
+            // --- DEBUG END ---
+
+            try {
+                // 1. Update Main Recommendation Card
+                document.getElementById('rec-ticker').textContent = `${bestStock.Ticker}`;
+                // FIX: Using bracket notation for key with spaces
+                document.getElementById('rec-return').textContent = `${bestStock["Return (%)"].toFixed(2)}%`;
+                document.getElementById('rec-trades').textContent = `${bestStock.Trades.toLocaleString()} Trades`;
+                document.getElementById('rec-summary').innerHTML = `
+                    The **Senior Quant Analyst** (via CrewAI) determined that **${bestStock.Ticker}** is the strongest signal, demonstrating an exceptional **${bestStock["Return (%)"].toFixed(2)}% return** during the historical backtest. This robust result, generated by the PyTorch LSTM model, warrants a strong buy recommendation.
+                `;
+
+                // 2. Populate Leaderboard
+                const container = document.getElementById('leaderboard-container');
+                document.getElementById('loading-indicator').style.display = 'none';
+                container.innerHTML = ''; // Clear loading indicator
+
+                reportData.forEach((stock, index) => {
+                    const color = stock.Color || COLOR_MAP[index % COLOR_MAP.length];
+                    const card = document.createElement('div');
+                    
+                    // NOTE: Removed `border-${color}` from the class name temporarily as it might not be a pre-compiled Tailwind class, 
+                    // but keeping it for now since the original code had it.
+                    card.className = `bg-gray-800 p-5 rounded-xl shadow-lg border-l-4 border-${color} transition hover:bg-gray-700`;
+                    card.innerHTML = `
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <span class="text-2xl font-black text-${color}">${index + 1}.</span>
+                                <div>
+                                    <p class="text-xl font-bold text-white">${stock.Ticker}</p>
+                                    <p class="text-sm text-gray-400">Total Trades: ${stock.Trades.toLocaleString()}</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-2xl font-extrabold text-${color}>${stock["Return (%)"].toFixed(2)}%</p>
+                                <p class="text-xs text-gray-500">Final Value: $${stock["Final Value ($)"].toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch(e) {
+                console.error("RENDER ERROR: Failed to process stock data. Check data types for toFixed() and toLocaleString()", e);
+                document.getElementById('loading-indicator').textContent = "RENDER ERROR: Check Console (F12) for data type mismatch (e.g., strings instead of numbers).";
+            }
+        }
+        
+        async function fetchReport() {
+            const indicator = document.getElementById('loading-indicator');
+            try {
+                const response = await fetch(API_ENDPOINT);
+                
+                if (!response.ok) {
+                    // Critical failure on server side (500) or file not found (404/503)
+                    indicator.textContent = `Error: Backend returned status ${response.status}. Analysis report not accessible.`;
+                    console.error('API Error:', await response.text());
+                    return;
+                }
+                
+                const result = await response.json();
+                console.log("1. Raw JSON successfully received:", result); // <-- ADDED DEBUG LINE
+                renderDashboard(result);
+
+            } catch (error) {
+                indicator.textContent = `Connection Error: Could not connect to backend API or JSON parsing failed.`;
+                console.error('Fetch/JSON Error:', error);
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', fetchReport);
+    </script>
+</body>
+</html>

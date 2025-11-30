@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.pyc
+*.pyd
+*.so
+
+# Virtual env
+venv/
+env/
+
+# Build artifacts
+*.log
+*.db
+*.sqlite3
+
+# Local data
+data/
+*.csv
+*.json
+models/
+
+# Editor folders
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+
+# Render build stuff
+*.lock
+
+# Cache
+*.cache
